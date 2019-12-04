@@ -1,4 +1,11 @@
-def get_unique_structs(struct_info):
+import copy
+
+from typing import List
+
+StrList = List[str]
+DictList = List[dict]
+
+def get_unique_structs(struct_info: dict) -> DictList:
 	"""
 	Returns a list containing the type mapping of all unique 
 	structs (object types) in a struct datatype mapping.
@@ -15,7 +22,7 @@ def get_unique_structs(struct_info):
 	return unique_structs
 
 
-def generate_field_name(field_name):
+def generate_field_name(field_name: str) -> str:
 	"""
 	Turns a snake_case field name into a PascalCase field name.
 	"""
@@ -31,7 +38,7 @@ def generate_field_name(field_name):
 	return struct_name
 
 
-def retype_nested_types(struct_info):
+def retype_nested_types(struct_info: dict) -> dict:
 	"""
 	Recursively finds any nested object types in `struct_info` and 
 	replaces the mapping info with the nested `__struct_name` field.
@@ -48,7 +55,7 @@ def retype_nested_types(struct_info):
 	return retyped_struct
 
 
-def create_struct_strings(struct_info, omit_empty=True):
+def create_struct_strings(struct_info: dict, omit_empty=True) -> StrList:
 	"""
 	Turns struct info maps into multiline strings which can get 
 	written to a .go file. 
@@ -67,7 +74,7 @@ def create_struct_strings(struct_info, omit_empty=True):
 		u.pop("__is_type_array")
 		struct_string = f"type {struct_name} struct " + "{\n"
 		for k, v in u.items():
-			field_name = generate_struct_name(k)
+			field_name = generate_field_name(k)
 			if omit_empty:
 				struct_tag = f"`json:\"{k},omitempty\"`"
 			else:
@@ -80,7 +87,7 @@ def create_struct_strings(struct_info, omit_empty=True):
 	return struct_strings
 
 
-def write_struct_file(struct_strings, package_name, output_filename):
+def write_struct_file(struct_strings: StrList, package_name: str, output_filename: str):
 	with open(f"{output_filename}", "w") as structfile:
 		structfile.write(f"package {package_name}\n\n")
 		for s in struct_strings:

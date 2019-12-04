@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
 	name='data2struct',
-	version='1.0',
+	version='1.1',
 	description='Base functions for various x2struct tools.',
 	url='https://github.com/jalavosus/data2struct',
 	author='jalavosus',
